@@ -127,7 +127,10 @@ class UserService {
 
 		await db.user.update({
 			where: { id: userData.id },
-			data: { isActivated: true },
+			data: {
+				isActivated: true,
+				roles: ['USER'],
+			},
 		})
 	}
 
