@@ -25,7 +25,7 @@
 
   5. Add DB URL to `.env` file
   6. Edit `prisma/schema.prisma` file, add models
-  7. npx prisma migrate dev (create DB & sql file, repeat after any changes in prisma schema)
+  7. `npx prisma migrate dev` (create DB & sql file, repeat after any changes in prisma schema)
   8. To add the mock data
      1. Create `seed.js` file
      2. Add to `package.json`
@@ -46,5 +46,16 @@
      4.  `@fastify/cors` - enables the use of CORS
      5.  `@fastify/sensible` - adds some useful decorators such as HTTP errors and assertions
  10.  Create `server.js` file
+ 11.  `npm i body-parser`
+
+============================================
+
+  1.   Try express instead of fastify
+       1.   add packages: `express cors cookie-parser express-validator bcryptjs jsonwebtoken uuid`
+  2.   
+
+
+
+
 
 ## II. Client

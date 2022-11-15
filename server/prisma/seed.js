@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+const prisma = new require('@prisma/client').PrismaClient()
 
 async function seed() {
 	await prisma.user.deleteMany()

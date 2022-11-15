@@ -18,7 +18,7 @@ model User {
   email          String        @unique
   name           String        @unique
   password       String
-  Tocken         Tocken?
+  Tocken         Token?
   isActivated    Boolean       @default(false)
   activationLink String?
   roles          Role[]        @default([GUEST])
@@ -30,11 +30,11 @@ model User {
 }
 
 // Tocken model
-model Tocken {
-  id            String @id @default(uuid())
-  user          User   @relation(fields: [userId], references: [id])
-  userId        String @unique
-  refreshTocken String
+model Token {
+  id           String @id @default(uuid())
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String @unique
+  refreshToken String
 }
 
 // Post model
