@@ -1,10 +1,11 @@
 const Router = require('express').Router
+const router = new Router()
 // const { body } = require('express-validator')
 
 const userCtrl = require('./controllers/user-controller')
 const postCtrl = require('./controllers/post-controller')
 
-const router = new Router()
+const authMiddleware = require('./middlewares/auth-middleware')
 
 /**
  * Routes
@@ -16,7 +17,7 @@ router.post('/user/logout', userCtrl.logout)
 router.get('/user/refresh', userCtrl.refresh)
 router.get('/user/activate/:link', userCtrl.activate)
 // router.get('/user/check/:code', async (req, res) => {})
-router.get('/user', userCtrl.getUsers)
+router.get('/user', authMiddleware, userCtrl.getUsers)
 // router.get('/user/:id', async (req, res) => {})
 // router.put('/user:id', async (req, res) => {})
 // router.delete('/user/:id', async (req, res) => {})

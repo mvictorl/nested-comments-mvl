@@ -7,7 +7,7 @@ const tokenService = require('./token-service')
 class UserService {
 	async registaration(email, name, password) {
 		const candidateUser = await db.user.findUnique({
-			where: { email: email },
+			where: { email },
 		})
 
 		if (candidateUser) {

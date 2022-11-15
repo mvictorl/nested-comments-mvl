@@ -1,11 +1,11 @@
-const ApiError = requier('../extensions/api-error')
-const tokenService = requier('../services/token-service.js')
+const ApiError = require('../extensions/api-error')
+const tokenService = require('../services/token-service')
 
 module.exports = (req, res, next) => {
 	console.log('===== Auth Middleware start =====')
 
 	try {
-		const authHeader = req.header.authorization
+		const authHeader = req.headers.authorization
 
 		if (!authHeader) {
 			return next(ApiError.AuthHeaderError())
