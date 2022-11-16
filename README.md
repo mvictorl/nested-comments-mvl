@@ -59,3 +59,7 @@
 
 
 ## II. Client
+  1. mobx
+  2. mobx-react-lite
+  3. axios
+  4. @types/axios (-D)

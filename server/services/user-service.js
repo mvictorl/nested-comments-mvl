@@ -108,7 +108,6 @@ class UserService {
 
 	async activate(activationLink, refreshToken) {
 		const userData = await tokenService.validateRefreshToken(refreshToken)
-		console.log('userData', userData)
 		if (!userData) {
 			throw ApiError.UnauthorizedUserError()
 		}
@@ -119,7 +118,6 @@ class UserService {
 				activationLink: true,
 			},
 		})
-		console.log('user', user)
 		if (!user || user.activationLink !== activationLink) {
 			// throw new Error('Не корректная ссылка активации')
 			throw ApiError.BadRequest('Некорректная ссылка активации')
