@@ -3,7 +3,7 @@ import { IUser } from '../models/IUser'
 // import { IAuthResponse } from '../models/IAuthResponse'
 import AuthService from '../services/AuthService'
 
-const API_URL = import.meta.env.VITE_API_KEY
+// const API_URL: string = process.env.REACT_APP_API_KEY || ''
 
 export default class Store {
 	user = {} as IUser
@@ -12,6 +12,13 @@ export default class Store {
 
 	constructor() {
 		makeAutoObservable(this)
+		// this.user = {
+		// 	id: '54b67ea2-94f7-4eea-b09c-ef9e1444603e',
+		// 	name: 'Victor',
+		// 	email: 'victor@ya.ru',
+		// 	isActivated: true,
+		// 	roles: ['USER'],
+		// }
 	}
 
 	setUser(user: IUser) {
@@ -53,7 +60,7 @@ export default class Store {
 
 	async logout() {
 		try {
-			const res = await AuthService.logout()
+			await AuthService.logout()
 			localStorage.clear() // removeItem('bearer-token')
 			this.setAuth(false)
 			this.setUser({} as IUser)

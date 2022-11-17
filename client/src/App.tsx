@@ -1,14 +1,22 @@
 import { FC, useContext, useState } from 'react'
-import { Context } from './main'
+import { Context } from './index'
 import { IUser } from './models/IUser'
 
 import './App.css'
 import LoginForm from './components/LoginForm'
+import {
+	Container,
+	createTheme,
+	CssBaseline,
+	ThemeProvider,
+} from '@mui/material'
+import { TopBar } from './components/TopBar'
 
 const App: FC = () => {
 	const { store } = useContext(Context)
 	const [] = useState<IUser[]>([])
 
+	const theme = createTheme()
 	// if (store.isLoading) {
 	//   return <div>Loading...</div>
 	// }
@@ -22,9 +30,11 @@ const App: FC = () => {
 	// }
 
 	return (
-		<div>
-			<LoginForm />
-			{/* <h1>
+		<ThemeProvider theme={theme}>
+			<CssBaseline />
+			<TopBar />
+			<Container component="main" maxWidth="xs">
+				{/* <h1>
 				{store.isAuth
 					? `User with e-mail ${store.user.email} is authorized`
 					: 'Authorization are needed'}
@@ -35,7 +45,8 @@ const App: FC = () => {
 					? 'Account with e-mail ${store.user.email} is activated'
 					: 'Account activation are needed'}
 			</h1> */}
-		</div>
+			</Container>
+		</ThemeProvider>
 	)
 }
 

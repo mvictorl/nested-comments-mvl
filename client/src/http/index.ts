@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { IAuthResponse } from '../models/IAuthResponse'
 
-const API_URL = import.meta.env.VITE_API_KEY
-const SELF_URL = import.meta.env.VITE_SELF_URL
+const API_URL: string = process.env.REACT_APP_API_KEY || ''
+const SELF_URL: string = process.env.REACT_APP_SELF_URL || ''
 
 export const $api = axios.create({
 	withCredentials: true,
