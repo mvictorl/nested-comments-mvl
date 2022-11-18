@@ -13,14 +13,23 @@ import {
 	Toolbar,
 	Tooltip,
 } from '@mui/material'
-import AdbIcon from '@mui/icons-material/Adb'
-import MenuIcon from '@mui/icons-material/Menu'
-import LogIn from '@mui/icons-material/Login'
+import {
+	Adb as AdbIcon,
+	Menu as MenuIcon,
+	Login as LogIn,
+	Logout as LogOut,
+} from '@mui/icons-material'
+// import MenuIcon from '@mui/icons-material/Menu'
+// import LogIn from '@mui/icons-material/Login'
 import Typography from '@mui/material/Typography'
 import { IUser } from '../models/IUser'
+import Divider from '@mui/material/Divider'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import { Link } from 'react-router-dom'
 
 const pages = ['Products', 'Pricing', 'Blog']
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+const settings = ['Profile', 'Account', 'Dashboard']
 
 export const TopBar: FC = () => {
 	const { store } = useContext(Context)
@@ -34,6 +43,8 @@ export const TopBar: FC = () => {
 	const handleCloseNavMenu = () => {
 		setAnchorElNav(null)
 	}
+
+	const handleLogin = () => {}
 
 	return (
 		<AppBar position="static">
@@ -144,56 +155,71 @@ function UserPlace(props: { user: IUser }): JSX.Element {
 		setAnchorElUser(null)
 	}
 
+	const hanleLogout = () => {}
+
 	if (!isEmpty(user)) {
 		return (
-			<Box sx={{ flexGrow: 0 }}>
-				<Tooltip title="Open settings">
-					<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-						<Avatar
-							alt={user.name}
-							// src={store.user?.avatar}
-						/>
-					</IconButton>
-				</Tooltip>
-				<Menu
-					sx={{ mt: '45px' }}
-					id="menu-appbar"
-					anchorEl={anchorElUser}
-					anchorOrigin={{
-						vertical: 'top',
-						horizontal: 'right',
-					}}
-					keepMounted
-					transformOrigin={{
-						vertical: 'top',
-						horizontal: 'right',
-					}}
-					open={Boolean(anchorElUser)}
-					onClose={handleCloseUserMenu}
-				>
-					{settings.map(setting => (
-						<MenuItem key={setting} onClick={handleCloseUserMenu}>
-							<Typography textAlign="center">{setting}</Typography>
+			<>
+				<Box sx={{ flexGrow: 0 }}>
+					<Tooltip title="Open settings">
+						<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+							<Avatar
+								alt={user.name}
+								// src={store.user?.avatar}
+							/>
+						</IconButton>
+					</Tooltip>
+					<Menu
+						sx={{ mt: '45px' }}
+						id="menu-appbar"
+						anchorEl={anchorElUser}
+						anchorOrigin={{
+							vertical: 'top',
+							horizontal: 'right',
+						}}
+						keepMounted
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'right',
+						}}
+						open={Boolean(anchorElUser)}
+						onClose={handleCloseUserMenu}
+					>
+						{settings.map(setting => (
+							<MenuItem key={setting} onClick={handleCloseUserMenu}>
+								<Typography textAlign="center">{setting}</Typography>
+							</MenuItem>
+						))}
+						<Divider />
+						<MenuItem>
+							<ListItemIcon>
+								<LogOut />
+							</ListItemIcon>
+							<ListItemText>
+								<Typography textAlign="center">Logout</Typography>
+							</ListItemText>
 						</MenuItem>
-					))}
-				</Menu>
-			</Box>
+					</Menu>
+				</Box>
+			</>
 		)
 	} else {
 		return (
-			<Box sx={{ flexGrow: 0 }}>
-				<Tooltip title="Login">
-					<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-						<LogIn
-							sx={{
-								fontWeight: 700,
-								textDecoration: 'none',
-								color: 'white',
-							}}
-						/>
-					</IconButton>
-				</Tooltip>
-			</Box>
+			<>
+				<Box sx={{ flexGrow: 0 }}>
+					<Tooltip title="Login">
+						<IconButton sx={{ p: 0 }} to="/login" component={Link}>
+							<LogIn
+								sx={{
+									fontWeight: 700,
+									textDecoration: 'none',
+									color: 'white',
+								}}
+							/>
+						</IconButton>
+					</Tooltip>
+				</Box>
+			</>
 		)
 	}
 }

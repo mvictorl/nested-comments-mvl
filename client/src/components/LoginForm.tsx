@@ -3,7 +3,11 @@ import { observer } from 'mobx-react-lite'
 import { FC, useState, useContext } from 'react'
 import { Context } from '../index'
 
-const LoginForm: FC = () => {
+type Props = {
+	isLogin: boolean
+}
+
+const LoginForm = ({ isLogin }: Props) => {
 	const [email, setEmail] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
 	const { store } = useContext(Context)
@@ -12,8 +16,7 @@ const LoginForm: FC = () => {
 		<div>
 			<Box
 				sx={{
-					marginY: 16,
-					// marginTop: 8,
+					marginTop: 8,
 					display: 'flex',
 					flexDirection: 'column',
 					alignItems: 'center',
@@ -33,6 +36,7 @@ const LoginForm: FC = () => {
 					/>
 
 					<TextField
+						error
 						onChange={e => setPassword(e.target.value)}
 						margin="normal"
 						fullWidth
@@ -49,20 +53,23 @@ const LoginForm: FC = () => {
 					fullWidth
 					aria-label="outlined button group"
 				>
-					<Button
-						onClick={() => store.login(email, password)}
-						variant="outlined"
-						sx={{ mt: 3, mb: 2 }}
-					>
-						Login
-					</Button>
-					<Button
-						onClick={() => store.registration(email, password)}
-						variant="outlined"
-						sx={{ mt: 3, mb: 2 }}
-					>
-						Registration
-					</Button>
+					{isLogin ? (
+						<Button
+							onClick={() => store.login(email, password)}
+							variant="outlined"
+							sx={{ mt: 3, mb: 2 }}
+						>
+							Login
+						</Button>
+					) : (
+						<Button
+							onClick={() => store.registration(email, password)}
+							variant="outlined"
+							sx={{ mt: 3, mb: 2 }}
+						>
+							Registration
+						</Button>
+					)}
 				</ButtonGroup>
 			</Box>
 			<br />

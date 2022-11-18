@@ -1,4 +1,5 @@
-import { FC, useContext, useState } from 'react'
+import React, { FC, useContext, useState } from 'react'
+import { Outlet } from 'react-router-dom'
 import { Context } from './index'
 import { IUser } from './models/IUser'
 
@@ -34,6 +35,7 @@ const App: FC = () => {
 			<CssBaseline />
 			<TopBar />
 			<Container component="main" maxWidth="xs">
+				<Outlet />
 				{/* <h1>
 				{store.isAuth
 					? `User with e-mail ${store.user.email} is authorized`

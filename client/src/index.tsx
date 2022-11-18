@@ -1,6 +1,7 @@
 import React, { createContext } from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './routes'
 import { IStore } from './models/IStore'
 import Store from './store'
 
@@ -17,7 +18,7 @@ export const Context = createContext<IStore>({ store })
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
 		<Context.Provider value={{ store }}>
-			<App />
+			<RouterProvider router={router} />
 		</Context.Provider>
 	</React.StrictMode>
 )
