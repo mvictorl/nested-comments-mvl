@@ -28,6 +28,7 @@ class UserService {
 				id: true,
 				email: true,
 				name: true,
+				roles: true,
 				isActivated: true,
 			},
 		})
@@ -43,6 +44,7 @@ class UserService {
 				id: true,
 				email: true,
 				name: true,
+				roles: true,
 				password: true,
 				isActivated: true,
 			},
@@ -60,6 +62,7 @@ class UserService {
 			id: user.id,
 			email: user.email,
 			name: user.name,
+			roles: user.roles,
 			isActivated: user.isActivated,
 		} // id, email, isActivated
 
@@ -96,6 +99,7 @@ class UserService {
 				id: true,
 				email: true,
 				name: true,
+				roles: true,
 				isActivated: true,
 			},
 		})
@@ -138,6 +142,7 @@ class UserService {
 				id: true,
 				name: true,
 				email: true,
+				roles: true,
 			},
 		})
 	}

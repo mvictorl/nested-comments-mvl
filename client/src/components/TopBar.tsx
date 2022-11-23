@@ -1,50 +1,53 @@
-import { FC, useState, MouseEvent, useContext } from 'react'
-import { Context } from '../index'
-import { isEmpty } from '../extensions/helpers'
+import { useState, useContext, MouseEvent } from 'react'
+import { Context } from '..'
+import { observer } from 'mobx-react-lite'
+import { useNavigate } from 'react-router-dom'
 import {
 	AppBar,
 	Box,
 	Button,
-	Avatar,
 	Container,
 	IconButton,
 	Menu,
 	MenuItem,
 	Toolbar,
-	Tooltip,
+	Typography,
 } from '@mui/material'
-import {
-	Adb as AdbIcon,
-	Menu as MenuIcon,
-	Login as LogIn,
-	Logout as LogOut,
-} from '@mui/icons-material'
-// import MenuIcon from '@mui/icons-material/Menu'
-// import LogIn from '@mui/icons-material/Login'
-import Typography from '@mui/material/Typography'
-import { IUser } from '../models/IUser'
-import Divider from '@mui/material/Divider'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import { Link } from 'react-router-dom'
+import { Adb as AdbIcon, Menu as MenuIcon } from '@mui/icons-material'
+import UserAvatar from './UserAvatar'
+import { pages } from '../pages'
 
-const pages = ['Products', 'Pricing', 'Blog']
-const settings = ['Profile', 'Account', 'Dashboard']
-
-export const TopBar: FC = () => {
+const TopBar = () => {
 	const { store } = useContext(Context)
+	const navigate = useNavigate()
 
 	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
-
 	const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
 		setAnchorElNav(event.currentTarget)
 	}
-
 	const handleCloseNavMenu = () => {
 		setAnchorElNav(null)
 	}
 
-	const handleLogin = () => {}
+	const handleClickNavMenuItem = (link: string) => {
+		setAnchorElNav(null)
+		navigate(link)
+	}
+
+	const currentPages = pages.filter(p => {
+		if (p.access === 'PUBLIC') {
+			return true
+		} else {
+			if (
+				store.user != null &&
+				store.user.roles != null &&
+				store.user.roles.includes(p.access)
+			) {
+				return true
+			}
+		}
+		return false
+	})
 
 	return (
 		<AppBar position="static">
@@ -98,9 +101,12 @@ export const TopBar: FC = () => {
 								display: { xs: 'block', md: 'none' },
 							}}
 						>
-							{pages.map(page => (
-								<MenuItem key={page} onClick={handleCloseNavMenu}>
-									<Typography textAlign="center">{page}</Typography>
+							{currentPages.map(page => (
+								<MenuItem
+									key={page.name}
+									onClick={() => handleClickNavMenuItem(page.link)}
+								>
+									<Typography textAlign="center">{page.name}</Typography>
 								</MenuItem>
 							))}
 						</Menu>
@@ -110,7 +116,7 @@ export const TopBar: FC = () => {
 						variant="h5"
 						noWrap
 						component="a"
-						href=""
+						href="/"
 						sx={{
 							mr: 2,
 							display: { xs: 'flex', md: 'none' },
@@ -125,101 +131,22 @@ export const TopBar: FC = () => {
 						LOGO
 					</Typography>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-						{pages.map(page => (
+						{currentPages.map(page => (
 							<Button
-								key={page}
-								onClick={handleCloseNavMenu}
+								key={page.name}
+								onClick={() => handleClickNavMenuItem(page.link)}
 								sx={{ my: 2, color: 'white', display: 'block' }}
 							>
-								{page}
+								{page.name}
 							</Button>
 						))}
 					</Box>
 
-					<UserPlace user={store.user} />
+					<UserAvatar />
 				</Toolbar>
 			</Container>
 		</AppBar>
 	)
 }
 
-function UserPlace(props: { user: IUser }): JSX.Element {
-	const user = props.user
-	const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
-
-	const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
-		setAnchorElUser(event.currentTarget)
-	}
-
-	const handleCloseUserMenu = () => {
-		setAnchorElUser(null)
-	}
-
-	const hanleLogout = () => {}
-
-	if (!isEmpty(user)) {
-		return (
-			<>
-				<Box sx={{ flexGrow: 0 }}>
-					<Tooltip title="Open settings">
-						<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-							<Avatar
-								alt={user.name}
-								// src={store.user?.avatar}
-							/>
-						</IconButton>
-					</Tooltip>
-					<Menu
-						sx={{ mt: '45px' }}
-						id="menu-appbar"
-						anchorEl={anchorElUser}
-						anchorOrigin={{
-							vertical: 'top',
-							horizontal: 'right',
-						}}
-						keepMounted
-						transformOrigin={{
-							vertical: 'top',
-							horizontal: 'right',
-						}}
-						open={Boolean(anchorElUser)}
-						onClose={handleCloseUserMenu}
-					>
-						{settings.map(setting => (
-							<MenuItem key={setting} onClick={handleCloseUserMenu}>
-								<Typography textAlign="center">{setting}</Typography>
-							</MenuItem>
-						))}
-						<Divider />
-						<MenuItem>
-							<ListItemIcon>
-								<LogOut />
-							</ListItemIcon>
-							<ListItemText>
-								<Typography textAlign="center">Logout</Typography>
-							</ListItemText>
-						</MenuItem>
-					</Menu>
-				</Box>
-			</>
-		)
-	} else {
-		return (
-			<>
-				<Box sx={{ flexGrow: 0 }}>
-					<Tooltip title="Login">
-						<IconButton sx={{ p: 0 }} to="/login" component={Link}>
-							<LogIn
-								sx={{
-									fontWeight: 700,
-									textDecoration: 'none',
-									color: 'white',
-								}}
-							/>
-						</IconButton>
-					</Tooltip>
-				</Box>
-			</>
-		)
-	}
-}
+export default observer(TopBar)

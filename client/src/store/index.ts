@@ -6,7 +6,7 @@ import AuthService from '../services/AuthService'
 // const API_URL: string = process.env.REACT_APP_API_KEY || ''
 
 export default class Store {
-	user = {} as IUser
+	user: IUser | null = null
 	isAuth = false
 	isLoading = false
 
@@ -21,7 +21,7 @@ export default class Store {
 		// }
 	}
 
-	setUser(user: IUser) {
+	setUser(user: IUser | null) {
 		this.user = user
 	}
 
@@ -63,7 +63,7 @@ export default class Store {
 			await AuthService.logout()
 			localStorage.clear() // removeItem('bearer-token')
 			this.setAuth(false)
-			this.setUser({} as IUser)
+			this.setUser(null)
 		} catch (e: any) {
 			console.error(e.response?.data?.message)
 		}
