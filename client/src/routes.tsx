@@ -3,6 +3,7 @@ import App from './App'
 
 import { Home, Posts, ErrorPage } from './pages'
 import LoginForm from './components/LoginForm'
+import RegistrationForm from './components/RegistrationForm'
 
 export const router = createBrowserRouter([
 	{
@@ -16,11 +17,11 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: 'registration',
-				element: <LoginForm isLogin={false} />,
+				element: <RegistrationForm />,
 			},
 			{
 				path: 'login',
-				element: <LoginForm isLogin={true} />,
+				element: <LoginForm />,
 			},
 			{
 				path: 'posts',

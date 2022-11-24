@@ -13,7 +13,7 @@ $api.interceptors.request.use(config => {
 	config.headers!.Authorization = `Bearer ${localStorage.getItem(
 		'bearer-token'
 	)}`
-	console.log('Request', config)
+	console.log('Request with token:', localStorage.getItem('bearer-token'))
 
 	return config
 })
@@ -22,7 +22,6 @@ $api.interceptors.response.use(
 	config => config,
 	async error => {
 		const origRequest = error.config
-
 		if (
 			error.response.status === 401 &&
 			error.config &&
@@ -30,20 +29,17 @@ $api.interceptors.response.use(
 		) {
 			origRequest._isRetry = true
 			try {
-				const response = await axios.get<IAuthResponse>(
-					`${API_URL}/user/refresh`,
-					{ withCredentials: true }
-				)
-				localStorage.setItem('bearer-token', response.data.accessToken)
+				const res = await axios.get<IAuthResponse>(`${API_URL}/user/refresh`, {
+					withCredentials: true,
+				})
+				localStorage.setItem('bearer-token', res.data.accessToken)
 				return $api.request(origRequest)
 			} catch (e) {
 				console.error('USER NOT AUTHORIZE', e)
 			}
 		}
-
 		localStorage.removeItem('bearer-token')
 		window.location.href = SELF_URL
-
 		return Promise.reject(error)
 	}
 )

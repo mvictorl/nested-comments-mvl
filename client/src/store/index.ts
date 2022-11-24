@@ -1,9 +1,10 @@
 import { makeAutoObservable } from 'mobx'
+import axios from 'axios'
 import { IUser } from '../models/IUser'
-// import { IAuthResponse } from '../models/IAuthResponse'
+import { IAuthResponse } from '../models/IAuthResponse'
 import AuthService from '../services/AuthService'
 
-// const API_URL: string = process.env.REACT_APP_API_KEY || ''
+const API_URL: string = process.env.REACT_APP_API_KEY || ''
 
 export default class Store {
 	user: IUser | null = null
@@ -37,6 +38,7 @@ export default class Store {
 	 * Functions
 	 */
 	async login(email: string, password: string) {
+		this.setLoading(true)
 		try {
 			const res = await AuthService.login(email, password)
 			localStorage.setItem('bearer-token', res.data.accessToken)
@@ -44,10 +46,13 @@ export default class Store {
 			this.setUser(res.data.user)
 		} catch (e: any) {
 			console.error(e.response?.data?.message)
+		} finally {
+			this.setLoading(false)
 		}
 	}
 
 	async registration(email: string, password: string) {
+		this.setLoading(true)
 		try {
 			const res = await AuthService.registration(email, password)
 			localStorage.setItem('bearer-token', res.data?.accessToken)
@@ -55,10 +60,13 @@ export default class Store {
 			this.setUser(res.data.user)
 		} catch (e: any) {
 			console.error(e.response?.data?.message)
+		} finally {
+			this.setLoading(false)
 		}
 	}
 
 	async logout() {
+		this.setLoading(true)
 		try {
 			await AuthService.logout()
 			localStorage.clear() // removeItem('bearer-token')
@@ -66,6 +74,24 @@ export default class Store {
 			this.setUser(null)
 		} catch (e: any) {
 			console.error(e.response?.data?.message)
+		} finally {
+			this.setLoading(false)
+		}
+	}
+
+	async checkAuth() {
+		this.setLoading(true)
+		try {
+			const res = await axios.get<IAuthResponse>(`${API_URL}/user/refresh`, {
+				withCredentials: true,
+			})
+			localStorage.setItem('bearer-token', res.data.accessToken)
+			this.setAuth(true)
+			this.setUser(res.data.user)
+		} catch (e: any) {
+			console.error(e.response?.data?.message)
+		} finally {
+			this.setLoading(false)
 		}
 	}
 }

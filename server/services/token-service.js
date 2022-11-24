@@ -10,7 +10,7 @@ class TokenService {
 		})
 		const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
 			algorithm: 'HS256',
-			expiresIn: '30s',
+			expiresIn: '30m',
 		})
 
 		return {

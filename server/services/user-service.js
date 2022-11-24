@@ -82,6 +82,7 @@ class UserService {
 		}
 
 		const userData = await tokenService.validateRefreshToken(refreshToken)
+
 		const tokenFromDb = await db.token.findFirst({
 			where: { refreshToken },
 			select: {
@@ -89,6 +90,7 @@ class UserService {
 				refreshToken: true,
 			},
 		})
+
 		if (!userData || !tokenFromDb) {
 			throw ApiError.UnauthorizedUserError()
 		}

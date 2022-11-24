@@ -1,17 +1,27 @@
-// import React, { useState } from 'react'
+import { useContext, useLayoutEffect } from 'react'
+import { Context } from './index'
+import { observer } from 'mobx-react-lite'
 import { Outlet } from 'react-router-dom'
 
 import './App.css'
 import {
+	CircularProgress,
 	Container,
 	createTheme,
 	CssBaseline,
+	Stack,
 	ThemeProvider,
 } from '@mui/material'
 import TopBar from './components/TopBar'
 
 const App = () => {
 	// const [] = useState<IUser[]>([])
+	const { store } = useContext(Context)
+
+	useLayoutEffect(() => {
+		store.checkAuth()
+		// eslint-disable-next-line
+	}, [store])
 
 	const theme = createTheme({
 		typography: {
@@ -23,11 +33,22 @@ const App = () => {
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
 			<TopBar />
-			<Container component="main" maxWidth="xl" sx={{ marginTop: 4 }}>
-				<Outlet />
+			<Container component="main" maxWidth="xl" sx={{ mt: '1rem' }}>
+				{store.isLoading ? (
+					<Stack
+						direction="column"
+						sx={{ height: '100vh' }}
+						justifyContent="center"
+						alignItems="center"
+					>
+						<CircularProgress size="5rem" />
+					</Stack>
+				) : (
+					<Outlet />
+				)}
 			</Container>
 		</ThemeProvider>
 	)
 }
 
-export default App
+export default observer(App)

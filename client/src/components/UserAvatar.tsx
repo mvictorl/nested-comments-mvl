@@ -38,14 +38,14 @@ function UserAvatar(): JSX.Element {
 		navigate('/home')
 	}
 
-	if (store.user !== null) {
+	if (store.isAuth) {
 		return (
 			<>
 				<Box sx={{ flexGrow: 0 }}>
 					<Tooltip title="Open settings">
 						<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
 							<Avatar
-								alt={store.user.name}
+								alt={store?.user?.name}
 								// src={store.user?.avatar}
 							/>
 						</IconButton>
