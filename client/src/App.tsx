@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Context } from './index'
 import { observer } from 'mobx-react-lite'
 import { Outlet } from 'react-router-dom'
@@ -18,10 +18,10 @@ const App = () => {
 	// const [] = useState<IUser[]>([])
 	const { store } = useContext(Context)
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		store.checkAuth()
 		// eslint-disable-next-line
-	}, [store])
+	}, [])
 
 	const theme = createTheme({
 		typography: {

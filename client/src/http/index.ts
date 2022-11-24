@@ -13,8 +13,6 @@ $api.interceptors.request.use(config => {
 	config.headers!.Authorization = `Bearer ${localStorage.getItem(
 		'bearer-token'
 	)}`
-	console.log('Request with token:', localStorage.getItem('bearer-token'))
-
 	return config
 })
 

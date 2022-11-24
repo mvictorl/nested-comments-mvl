@@ -63,3 +63,7 @@
   2. mobx-react-lite
   3. axios
   4. @types/axios (-D)
+
+```
+StrictMode redraws components twice!!!
+```
