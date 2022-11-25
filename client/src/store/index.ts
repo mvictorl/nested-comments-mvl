@@ -79,6 +79,23 @@ export default class Store {
 		}
 	}
 
+	async check() {
+		try {
+			const res = await AuthService.check()
+			if (res.data) {
+				localStorage.setItem('bearer-token', res.data?.accessToken)
+				this.setAuth(true)
+				this.setUser(res.data.user)
+			} else {
+				localStorage.clear() // removeItem('bearer-token')
+				this.setAuth(false)
+				this.setUser(null)
+			}
+		} catch (e: any) {
+			console.error(e.response?.data?.message)
+		}
+	}
+
 	async checkAuth() {
 		this.setLoading(true)
 		try {

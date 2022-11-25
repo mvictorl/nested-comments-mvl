@@ -112,6 +112,42 @@ class UserService {
 		return { ...tokens, user: userDto }
 	}
 
+	async check(refreshToken) {
+		if (!refreshToken) return null
+
+		const userData = await tokenService.validateRefreshToken(refreshToken)
+		if (!userData) return null
+
+		const tokenFromDb = await db.token.findFirst({
+			where: { refreshToken },
+			select: {
+				id: true,
+				refreshToken: true,
+			},
+		})
+		if (!tokenFromDb) return null
+
+		try {
+			const userDto = await db.user.findUnique({
+				where: { id: userData.id },
+				select: {
+					id: true,
+					email: true,
+					name: true,
+					roles: true,
+					isActivated: true,
+				},
+			})
+
+			const tokens = tokenService.generatePairOfTokens({ ...userDto })
+			await tokenService.saveToken(userDto.id, tokens.refreshToken)
+
+			return { ...tokens, user: userDto }
+		} catch (e) {
+			console.error(e)
+		}
+	}
+
 	async activate(activationLink, refreshToken) {
 		const userData = await tokenService.validateRefreshToken(refreshToken)
 		if (!userData) {

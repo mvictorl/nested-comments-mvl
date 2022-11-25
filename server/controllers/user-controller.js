@@ -47,16 +47,30 @@ class UserController {
 	async refresh(req, res, next) {
 		try {
 			const { refreshToken } = req.cookies // Take the 'refreshToken' token from cookie
-			console.log('Cookies-token:', refreshToken)
-
 			const userData = await userService.refresh(refreshToken)
-			console.log('User data (Controller):', userData)
-
 			res.cookie('refreshToken', userData.refreshToken, {
 				httpOnly: true,
 				maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days as refresh token
 			})
-			console.log('User controller Done...')
+			return res.json(userData)
+		} catch (e) {
+			next(e)
+		}
+	}
+
+	async check(req, res, next) {
+		try {
+			const { refreshToken } = req.cookies // Take the 'refreshToken' token from cookie
+			const userData = await userService.check(refreshToken)
+			if (userData) {
+				res.cookie('refreshToken', userData.refreshToken, {
+					httpOnly: true,
+					maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days as refresh token
+				})
+			} else {
+				const data = await userService.logout(refreshToken) // Call 'logout' service function
+				res.clearCookie('refreshToken') // Delete the 'refreshToken' cookie
+			}
 			return res.json(userData)
 		} catch (e) {
 			next(e)

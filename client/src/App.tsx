@@ -19,7 +19,7 @@ const App = () => {
 	const { store } = useContext(Context)
 
 	useEffect(() => {
-		store.checkAuth()
+		store.check()
 		// eslint-disable-next-line
 	}, [])
 
