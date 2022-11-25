@@ -20,6 +20,11 @@ module.exports = (req, res, next) => {
 		if (!userData) {
 			return next(ApiError.ValidateAccessTockenError())
 		}
+
+		// if (!userData.isActivated) {
+		// 	return next(ApiError.UserActivationError())
+		// }
+
 		req.user = userData
 		next()
 	} catch (e) {

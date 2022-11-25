@@ -4,6 +4,8 @@ import App from './App'
 import { Home, Posts, ErrorPage } from './pages'
 import LoginForm from './components/LoginForm'
 import RegistrationForm from './components/RegistrationForm'
+import Profile from './components/Profile'
+import Account from './components/Account'
 
 export const router = createBrowserRouter([
 	{
@@ -16,6 +18,10 @@ export const router = createBrowserRouter([
 				element: <Home />,
 			},
 			{
+				path: 'home',
+				element: <Home />,
+			},
+			{
 				path: 'registration',
 				element: <RegistrationForm />,
 			},
@@ -24,12 +30,16 @@ export const router = createBrowserRouter([
 				element: <LoginForm />,
 			},
 			{
-				path: 'posts',
-				element: <Posts />,
+				path: 'profile',
+				element: <Profile />,
 			},
 			{
-				path: 'home',
-				element: <Home />,
+				path: 'account',
+				element: <Account />,
+			},
+			{
+				path: 'posts',
+				element: <Posts />,
 			},
 		],
 	},

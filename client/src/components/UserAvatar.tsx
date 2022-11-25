@@ -14,9 +14,14 @@ import {
 	Tooltip,
 	Typography,
 } from '@mui/material'
-import { Login as LogIn, Logout as LogOut } from '@mui/icons-material'
+import {
+	Login as LogIn,
+	Logout as LogOut,
+	AccountBox,
+	Settings,
+} from '@mui/icons-material'
 
-const settings = ['Profile', 'Account', 'Dashboard']
+// const settings = ['Profile', 'Account', 'Dashboard']
 
 function UserAvatar(): JSX.Element {
 	const { store } = useContext(Context)
@@ -32,7 +37,15 @@ function UserAvatar(): JSX.Element {
 		setAnchorElUser(null)
 	}
 
-	const hanleLogout = async () => {
+	const handleProfile = async () => {
+		setAnchorElUser(null)
+		navigate('/profile')
+	}
+	const handleAccount = async () => {
+		setAnchorElUser(null)
+		navigate('/account')
+	}
+	const handleLogout = async () => {
 		await store.logout()
 		setAnchorElUser(null)
 		navigate('/home')
@@ -66,18 +79,34 @@ function UserAvatar(): JSX.Element {
 						open={Boolean(anchorElUser)}
 						onClose={handleCloseUserMenu}
 					>
-						{settings.map(setting => (
+						{/* {settings.map(setting => (
 							<MenuItem key={setting} onClick={handleCloseUserMenu}>
 								<Typography textAlign="center">{setting}</Typography>
 							</MenuItem>
-						))}
+						))} */}
+						<MenuItem onClick={handleProfile}>
+							<ListItemIcon>
+								<AccountBox />
+							</ListItemIcon>
+							<ListItemText>
+								<Typography textAlign="left">Profile</Typography>
+							</ListItemText>
+						</MenuItem>
+						<MenuItem onClick={handleAccount}>
+							<ListItemIcon>
+								<Settings />
+							</ListItemIcon>
+							<ListItemText>
+								<Typography textAlign="left">Account</Typography>
+							</ListItemText>
+						</MenuItem>
 						<Divider />
-						<MenuItem onClick={() => hanleLogout()}>
+						<MenuItem onClick={handleLogout}>
 							<ListItemIcon>
 								<LogOut />
 							</ListItemIcon>
 							<ListItemText>
-								<Typography textAlign="center">Logout</Typography>
+								<Typography textAlign="left">Logout</Typography>
 							</ListItemText>
 						</MenuItem>
 					</Menu>

@@ -1,8 +1,8 @@
-import { Box, Button, Paper, TextField } from '@mui/material'
+import { Button, Paper, TextField, Stack, Grid, Link } from '@mui/material'
 import { observer } from 'mobx-react-lite'
 import { FormEvent, useState, useContext } from 'react'
 import { Context } from '../index'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link as rrdLink } from 'react-router-dom'
 
 const LoginForm = () => {
 	const [email, setEmail] = useState<string>('')
@@ -20,26 +20,27 @@ const LoginForm = () => {
 		return <h1 style={{ marginTop: 24 }}>Loading...</h1>
 	} else {
 		return (
-			<div>
-				<Box
-					component="form"
-					onSubmit={handlerLogin}
-					sx={{
-						marginTop: 8,
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-					}}
-				>
+			<Grid container>
+				<Grid item xs={0} md={3} lg={4} />
+				<Grid item xs={12} md={6} lg={4}>
 					<Paper
 						sx={{
-							padding: 8,
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'center',
+							padding: 1,
 						}}
 					>
-						<Box sx={{ mt: 1 }}>
+						<Stack
+							component="form"
+							onSubmit={handlerLogin}
+							direction="column"
+							sx={{
+								// maxWidth: 'xl',
+								marginTop: 2,
+								display: 'flex',
+								flexDirection: 'column',
+								alignItems: 'center',
+							}}
+						>
+							{/* <Box sx={{ mt: 1 }}> */}
 							<TextField
 								onChange={e => setEmail(e.target.value)}
 								value={email}
@@ -64,18 +65,29 @@ const LoginForm = () => {
 								placeholder="Password"
 								helperText="Error"
 							/>
-						</Box>
+							{/* </Box> */}
 
-						<Button
-							type="submit"
-							variant="contained"
-							sx={{ mt: 3, mb: 2, width: '50%' }}
+							<Button
+								type="submit"
+								variant="contained"
+								sx={{ mt: 1, mb: 1, width: '50%' }}
+							>
+								Login
+							</Button>
+						</Stack>
+						<Link
+							component={rrdLink}
+							to="../registration"
+							underline="hover"
+							marginTop={2}
+							sx={{ float: 'right' }}
 						>
-							Login
-						</Button>
+							Create an account
+						</Link>
 					</Paper>
-				</Box>
-			</div>
+				</Grid>
+				<Grid item xs={0} md={3} lg={4} />
+			</Grid>
 		)
 	}
 }

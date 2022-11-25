@@ -11,6 +11,7 @@ import {
 	CssBaseline,
 	Stack,
 	ThemeProvider,
+	responsiveFontSizes,
 } from '@mui/material'
 import TopBar from './components/TopBar'
 
@@ -23,11 +24,12 @@ const App = () => {
 		// eslint-disable-next-line
 	}, [])
 
-	const theme = createTheme({
+	let theme = createTheme({
 		typography: {
 			fontFamily: 'Roboto, sans-serif',
 		},
 	})
+	theme = responsiveFontSizes(theme)
 
 	return (
 		<ThemeProvider theme={theme}>

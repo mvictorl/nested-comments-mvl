@@ -24,6 +24,10 @@ module.exports = class ApiError extends Error {
 		)
 	}
 
+	// static UserActivationError() {
+	// 	return new ApiError(403, 'Account are not activated')
+	// }
+
 	static BadRequest(message, errors = []) {
 		return new ApiError(400, message, errors)
 	}
