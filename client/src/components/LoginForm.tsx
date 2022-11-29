@@ -1,4 +1,13 @@
-import { Button, Paper, TextField, Stack, Grid, Link } from '@mui/material'
+import {
+	Button,
+	Paper,
+	TextField,
+	Stack,
+	Grid,
+	Link,
+	Typography,
+	useTheme,
+} from '@mui/material'
 import { observer } from 'mobx-react-lite'
 import { FormEvent, useState, useContext, useEffect } from 'react'
 import { Context } from '../index'
@@ -12,6 +21,7 @@ const LoginForm = () => {
 	const [passwordError, setPasswordError] = useState<string>(' ')
 
 	const { store } = useContext(Context)
+	const theme = useTheme()
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -42,13 +52,6 @@ const LoginForm = () => {
 	const handlerLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		await store.login(email, password)
-		// if (!store.validationErrors) {
-		// 	console.log('No validation errors')
-
-		// 	navigate('/home')
-		// }
-		// console.log('Validation errors')
-		// // navigate('/home')
 	}
 
 	if (store.isLoading) {
@@ -68,14 +71,22 @@ const LoginForm = () => {
 							onSubmit={handlerLogin}
 							direction="column"
 							sx={{
-								// maxWidth: 'xl',
 								marginTop: 2,
 								display: 'flex',
 								flexDirection: 'column',
 								alignItems: 'center',
 							}}
 						>
-							{/* <Box sx={{ mt: 1 }}> */}
+							<Typography
+								variant="h4"
+								sx={{
+									// textShadow: '2px 2px 2px rgba(0, 0, 255, 0.3)',
+									fontWeight: 700,
+									color: theme.palette.primary.main,
+								}}
+							>
+								Sign in
+							</Typography>
 							<TextField
 								onChange={e => setEmail(e.target.value)}
 								value={email}
@@ -101,7 +112,6 @@ const LoginForm = () => {
 								error={passwordError !== ' '}
 								helperText={passwordError}
 							/>
-							{/* </Box> */}
 
 							<Button
 								type="submit"
