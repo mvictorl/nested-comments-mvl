@@ -3,6 +3,7 @@ import axios from 'axios'
 import { IUser } from '../models/IUser'
 import { IAuthResponse } from '../models/IAuthResponse'
 import AuthService from '../services/AuthService'
+import { IValidationErrorResponse } from '../models/IValidationErrorResponse'
 
 const API_URL: string = process.env.REACT_APP_API_KEY || ''
 
@@ -10,6 +11,7 @@ export default class Store {
 	user: IUser | null = null
 	isAuth = false
 	isLoading = false
+	validationErrors: IValidationErrorResponse[] | null = null
 
 	constructor() {
 		makeAutoObservable(this)
@@ -20,6 +22,7 @@ export default class Store {
 		// 	isActivated: true,
 		// 	roles: ['USER'],
 		// }
+		if (localStorage.getItem('isauth') === 'true') this.isAuth = true
 	}
 
 	setUser(user: IUser | null) {
@@ -34,6 +37,10 @@ export default class Store {
 		this.isLoading = bool
 	}
 
+	setValidationErrors(errors: IValidationErrorResponse[] | null) {
+		this.validationErrors = errors
+	}
+
 	/**
 	 * Functions
 	 */
@@ -42,10 +49,17 @@ export default class Store {
 		try {
 			const res = await AuthService.login(email, password)
 			localStorage.setItem('bearer-token', res.data.accessToken)
+			localStorage.setItem('isauth', 'true')
 			this.setAuth(true)
 			this.setUser(res.data.user)
+			this.setValidationErrors(null)
 		} catch (e: any) {
-			console.error(e.response?.data?.message)
+			if (e.response?.data?.message === 'Validation error') {
+				this.setValidationErrors(e.response?.data?.errors)
+			} else console.error(e)
+			// console.log('Login error (validation):', e.response?.data?.message)
+			// console.log('Validation error:', e.response?.data?.errors)
+			// console.log('Validation error:', e.response?.data?.errors[0])
 		} finally {
 			this.setLoading(false)
 		}
@@ -56,6 +70,7 @@ export default class Store {
 		try {
 			const res = await AuthService.registration(email, password)
 			localStorage.setItem('bearer-token', res.data?.accessToken)
+			localStorage.setItem('isauth', 'true')
 			this.setAuth(true)
 			this.setUser(res.data.user)
 		} catch (e: any) {
@@ -84,6 +99,7 @@ export default class Store {
 			const res = await AuthService.check()
 			if (res.data) {
 				localStorage.setItem('bearer-token', res.data?.accessToken)
+				localStorage.setItem('isauth', 'true')
 				this.setAuth(true)
 				this.setUser(res.data.user)
 			} else {
@@ -103,6 +119,7 @@ export default class Store {
 				withCredentials: true,
 			})
 			localStorage.setItem('bearer-token', res.data.accessToken)
+			localStorage.setItem('isauth', 'true')
 			this.setAuth(true)
 			this.setUser(res.data.user)
 		} catch (e: any) {

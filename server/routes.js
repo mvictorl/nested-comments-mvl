@@ -1,6 +1,6 @@
 const Router = require('express').Router
 const router = new Router()
-// const { body } = require('express-validator')
+const { body, check } = require('express-validator')
 
 const userCtrl = require('./controllers/user-controller')
 const postCtrl = require('./controllers/post-controller')
@@ -12,7 +12,19 @@ const authMiddleware = require('./middlewares/auth-middleware')
  */
 // Users routers
 router.post('/user/registration', userCtrl.registration)
-router.post('/user/login', userCtrl.login)
+router.post(
+	'/user/login',
+	body('email').isEmail(),
+	check('password')
+		.isLength({
+			min: process.env.PASS_LENGTH_MIN,
+			max: process.env.PASS_LENGTH_MAX,
+		})
+		.withMessage(
+			`Password mast be from ${process.env.PASS_LENGTH_MIN} to ${process.env.PASS_LENGTH_MAX} characrets`
+		),
+	userCtrl.login
+)
 router.post('/user/logout', userCtrl.logout)
 router.get('/user/refresh', userCtrl.refresh)
 router.get('/user/check', userCtrl.check)

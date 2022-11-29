@@ -37,7 +37,7 @@ $api.interceptors.response.use(
 			}
 		}
 		localStorage.removeItem('bearer-token')
-		window.location.href = SELF_URL
+		if (error.response.status !== 422) window.location.href = SELF_URL
 		return Promise.reject(error)
 	}
 )

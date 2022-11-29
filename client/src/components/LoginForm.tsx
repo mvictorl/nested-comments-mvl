@@ -1,19 +1,54 @@
 import { Button, Paper, TextField, Stack, Grid, Link } from '@mui/material'
 import { observer } from 'mobx-react-lite'
-import { FormEvent, useState, useContext } from 'react'
+import { FormEvent, useState, useContext, useEffect } from 'react'
 import { Context } from '../index'
 import { useNavigate, Link as rrdLink } from 'react-router-dom'
 
 const LoginForm = () => {
 	const [email, setEmail] = useState<string>('')
+	const [emailError, setEmailError] = useState<string>(' ')
+
 	const [password, setPassword] = useState<string>('')
+	const [passwordError, setPasswordError] = useState<string>(' ')
+
 	const { store } = useContext(Context)
 	const navigate = useNavigate()
+
+	useEffect(() => {
+		if (store.isAuth) navigate('/home')
+		// eslint-disable-next-line
+	}, [store.isAuth])
+
+	useEffect(() => {
+		if (store.validationErrors != null) {
+			store.validationErrors.map(e => {
+				switch (e.param) {
+					case 'email':
+						return setEmailError(e.msg)
+					case 'password':
+						return setPasswordError(e.msg)
+					default:
+						return null
+				}
+			})
+		} else {
+			setEmailError(' ')
+			setPasswordError(' ')
+			if (store.isAuth) navigate('/home')
+		}
+		// eslint-disable-next-line
+	}, [store])
 
 	const handlerLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		await store.login(email, password)
-		navigate('/home')
+		// if (!store.validationErrors) {
+		// 	console.log('No validation errors')
+
+		// 	navigate('/home')
+		// }
+		// console.log('Validation errors')
+		// // navigate('/home')
 	}
 
 	if (store.isLoading) {
@@ -50,11 +85,11 @@ const LoginForm = () => {
 								name="email"
 								type="email"
 								placeholder="Email Address"
-								helperText=" "
+								error={emailError !== ' '}
+								helperText={emailError}
 							/>
 
 							<TextField
-								error
 								onChange={e => setPassword(e.target.value)}
 								value={password}
 								margin="normal"
@@ -63,7 +98,8 @@ const LoginForm = () => {
 								name="password"
 								type="password"
 								placeholder="Password"
-								helperText="Error"
+								error={passwordError !== ' '}
+								helperText={passwordError}
 							/>
 							{/* </Box> */}
 
