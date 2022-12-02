@@ -11,7 +11,7 @@ export default class Store {
 	user: IUser | null = null
 	isAuth = false
 	isLoading = false
-	validationErrors: IValidationErrorResponse[] | null = null
+	validationErrors: IValidationErrorResponse[] = []
 
 	constructor() {
 		makeAutoObservable(this)
@@ -37,7 +37,7 @@ export default class Store {
 		this.isLoading = bool
 	}
 
-	setValidationErrors(errors: IValidationErrorResponse[] | null) {
+	setValidationErrors(errors: IValidationErrorResponse[] = []) {
 		this.validationErrors = errors
 	}
 
@@ -52,10 +52,11 @@ export default class Store {
 			localStorage.setItem('isauth', 'true')
 			this.setAuth(true)
 			this.setUser(res.data.user)
-			this.setValidationErrors(null)
+			this.setValidationErrors()
 		} catch (e: any) {
 			if (e.response?.data?.message === 'Validation error') {
 				this.setValidationErrors(e.response?.data?.errors)
+				// return e.response.data.errors || null
 			} else console.error(e)
 			// console.log('Login error (validation):', e.response?.data?.message)
 			// console.log('Validation error:', e.response?.data?.errors)
@@ -65,10 +66,20 @@ export default class Store {
 		}
 	}
 
-	async registration(name: string, email: string, password: string) {
+	async registration(
+		name: string,
+		email: string,
+		password: string,
+		passwordConfirm: string
+	) {
 		this.setLoading(true)
 		try {
-			const res = await AuthService.registration(name, email, password)
+			const res = await AuthService.registration(
+				name,
+				email,
+				password,
+				passwordConfirm
+			)
 			localStorage.setItem('bearer-token', res.data?.accessToken)
 			localStorage.setItem('isauth', 'true')
 			this.setAuth(true)

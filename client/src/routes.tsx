@@ -6,6 +6,8 @@ import LoginForm from './components/LoginForm'
 import RegistrationForm from './components/RegistrationForm'
 import Profile from './components/Profile'
 import Account from './components/Account'
+import Products from './pages/products'
+import Pricing from './pages/pricing'
 
 export const router = createBrowserRouter([
 	{
@@ -20,6 +22,14 @@ export const router = createBrowserRouter([
 			{
 				path: 'home',
 				element: <Home />,
+			},
+			{
+				path: 'products',
+				element: <Products />,
+			},
+			{
+				path: 'pricing',
+				element: <Pricing />,
 			},
 			{
 				path: 'registration',

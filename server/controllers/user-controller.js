@@ -10,7 +10,7 @@ class UserController {
 			// 	return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))
 			// }
 			const { name, email, password } = req.body
-			const userData = await userService.registaration(email, name, password)
+			const userData = await userService.registaration(name, email, password)
 			// res.cookie('refreshToken', userData.refreshToken, {
 			// 	httpOnly: true,
 			// 	maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days as refresh token
@@ -23,14 +23,14 @@ class UserController {
 
 	async login(req, res, next) {
 		try {
-			const errorFormatter = ({ location, msg, param }) => {
-				// Build your resulting errors however you want! String, object, whatever - it works!
-				// return `${location}[${param}]: ${msg}`
-				return { location, param, msg }
-			}
-			const errors = validationResult(req).formatWith(errorFormatter)
-			console.log('Validation errors:', errors)
+			// const errorFormatter = ({ location, msg, param }) => {
+			// 	// Build your resulting errors however you want! String, object, whatever - it works!
+			// 	// return `${location}[${param}]: ${msg}`
+			// 	return { location, param, msg }
+			// }
+			const errors = validationResult(req) //.formatWith(errorFormatter)
 			if (!errors.isEmpty()) {
+				console.log(errors)
 				// return res.status(400).json({ errors: errors.array() })
 				return next(
 					ApiError.ValidationError('Validation error', errors.array())

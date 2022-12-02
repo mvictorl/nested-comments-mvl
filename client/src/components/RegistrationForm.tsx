@@ -12,6 +12,7 @@ import { observer } from 'mobx-react-lite'
 import { FormEvent, useState, useContext, useEffect } from 'react'
 import { Context } from '../index'
 import { useNavigate, Link as rrdLink } from 'react-router-dom'
+// import { IValidationErrorResponse } from '../models/IValidationErrorResponse'
 
 const RegistrationForm = () => {
 	const [name, setName] = useState<string>('')
@@ -22,6 +23,9 @@ const RegistrationForm = () => {
 
 	const [password, setPassword] = useState<string>('')
 	const [passwordError, setPasswordError] = useState<string>(' ')
+
+	const [passwordConfirm, setConfirmPassword] = useState<string>('')
+	const [passwordConfirmError, setPasswordConfirmError] = useState<string>(' ')
 
 	const { store } = useContext(Context)
 	const theme = useTheme()
@@ -34,30 +38,42 @@ const RegistrationForm = () => {
 
 	useEffect(() => {
 		if (store.validationErrors != null) {
-			store.validationErrors.map(e => {
+			console.log(store.validationErrors)
+
+			store.validationErrors.forEach(e => {
 				switch (e.param) {
 					case 'name':
-						return setNameError(e.msg)
+						setNameError(e.msg)
+						setName(e.value)
+						break
 					case 'email':
-						return setEmailError(e.msg)
+						setEmailError(e.msg)
+						setEmail(e.value)
+						break
 					case 'password':
-						return setPasswordError(e.msg)
-					default:
-						return null
+						setPasswordError(e.msg)
+						setPassword(e.value)
+						break
+					case 'passwordConfirm':
+						setPasswordConfirmError(e.msg)
+						setConfirmPassword(e.value)
+						break
 				}
 			})
+			return store.setValidationErrors()
 		} else {
 			setNameError(' ')
 			setEmailError(' ')
 			setPasswordError(' ')
+			setPasswordConfirmError(' ')
 			if (store.isAuth) navigate('/home')
 		}
 		// eslint-disable-next-line
-	}, [store])
+	}, [])
 
 	const handlerLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		await store.registration(name, email, password)
+		await store.registration(name, email, password, passwordConfirm)
 	}
 
 	if (store.isLoading) {
@@ -74,7 +90,7 @@ const RegistrationForm = () => {
 					>
 						<Stack
 							component="form"
-							onSubmit={handlerLogin}
+							onSubmit={e => handlerLogin(e)}
 							direction="column"
 							sx={{
 								marginTop: 2,
@@ -91,7 +107,7 @@ const RegistrationForm = () => {
 									color: theme.palette.primary.main,
 								}}
 							>
-								Create account
+								Ragistration
 							</Typography>
 							<TextField
 								onChange={e => setName(e.target.value)}
@@ -132,12 +148,25 @@ const RegistrationForm = () => {
 								helperText={passwordError}
 							/>
 
+							<TextField
+								onChange={e => setPassword(e.target.value)}
+								value={passwordConfirm}
+								margin="normal"
+								fullWidth
+								label="Password Confirmation"
+								name="passwordConfirm"
+								type="password"
+								placeholder="Password Confirmation"
+								error={passwordConfirmError !== ' '}
+								helperText={passwordConfirmError}
+							/>
+
 							<Button
 								type="submit"
 								variant="contained"
 								sx={{ mt: 1, mb: 1, width: '50%' }}
 							>
-								Registration
+								Login
 							</Button>
 						</Stack>
 						<Link

@@ -1,23 +1,16 @@
-import { useContext, useEffect } from 'react'
-import { Context } from '../index'
+// import { useContext } from 'react'
+// import { Context } from '../index'
 import { observer } from 'mobx-react-lite'
-import { useNavigate } from 'react-router-dom'
 import { Container, Typography } from '@mui/material'
 
-const Posts = () => {
-	const { store } = useContext(Context)
-	const navigate = useNavigate()
-
-	useEffect(() => {
-		if (!store.isAuth) navigate('/login')
-		// eslint-disable-next-line
-	}, [])
+const Pricing = () => {
+	// const { store } = useContext(Context)
 
 	return (
 		<>
 			<Container>
 				<Typography textAlign="justify" variant="h3">
-					Posts
+					Pricing
 				</Typography>
 				<Typography textAlign="justify">
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime et ea
@@ -30,4 +23,4 @@ const Posts = () => {
 	)
 }
 
-export default observer(Posts)
+export default observer(Pricing)

@@ -5,9 +5,10 @@ const ApiError = require('../extensions/api-error')
 const tokenService = require('./token-service')
 
 class UserService {
-	async registaration(email, name, password) {
+	async registaration(name, email, password) {
 		const candidateUser = await db.user.findUnique({
 			where: { email },
+			select: { id: true },
 		})
 
 		if (candidateUser) {
@@ -49,14 +50,28 @@ class UserService {
 				isActivated: true,
 			},
 		})
-		if (!user) {
-			throw ApiError.BadRequest(`E-mail ${email} not found`)
-		}
+		// if (!user) {
+		// 	throw ApiError.ValidationError('Validation error', [
+		// 		{
+		// 			location: 'body',
+		// 			param: 'email',
+		// 			msg: `E-mail (${email}) not found`,
+		// 		},
+		// 	])
+		// 	// ApiError.BadRequest('Validation error', errors.array())
+		// }
 
-		const isPasswordsEqials = await bcrypt.compare(password, user.password)
-		if (!isPasswordsEqials) {
-			throw ApiError.BadRequest(`Wrong passord`)
-		}
+		// const isPasswordsEqials = await bcrypt.compare(password, user.password)
+		// if (!isPasswordsEqials) {
+		// 	throw ApiError.ValidationError('Validation error', [
+		// 		{
+		// 			location: 'body',
+		// 			param: 'password',
+		// 			msg: `Wrong passord`,
+		// 		},
+		// 	])
+		// 	// throw ApiError.BadRequest(`Wrong passord`)
+		// }
 
 		const userDto = {
 			id: user.id,

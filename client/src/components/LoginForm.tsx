@@ -12,6 +12,7 @@ import { observer } from 'mobx-react-lite'
 import { FormEvent, useState, useContext, useEffect } from 'react'
 import { Context } from '../index'
 import { useNavigate, Link as rrdLink } from 'react-router-dom'
+// import { IValidationErrorResponse } from '../models/IValidationErrorResponse'
 
 const LoginForm = () => {
 	const [email, setEmail] = useState<string>('')
@@ -31,23 +32,28 @@ const LoginForm = () => {
 
 	useEffect(() => {
 		if (store.validationErrors != null) {
-			store.validationErrors.map(e => {
+			console.log(store.validationErrors)
+
+			store.validationErrors.forEach(e => {
 				switch (e.param) {
 					case 'email':
-						return setEmailError(e.msg)
+						setEmailError(e.msg)
+						setEmail(e.value)
+						break
 					case 'password':
-						return setPasswordError(e.msg)
-					default:
-						return null
+						setPasswordError(e.msg)
+						setPassword(e.value)
+						break
 				}
 			})
+			return store.setValidationErrors()
 		} else {
 			setEmailError(' ')
 			setPasswordError(' ')
 			if (store.isAuth) navigate('/home')
 		}
 		// eslint-disable-next-line
-	}, [store])
+	}, [])
 
 	const handlerLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
@@ -68,7 +74,7 @@ const LoginForm = () => {
 					>
 						<Stack
 							component="form"
-							onSubmit={handlerLogin}
+							onSubmit={e => handlerLogin(e)}
 							direction="column"
 							sx={{
 								marginTop: 2,

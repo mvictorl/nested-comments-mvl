@@ -13,12 +13,14 @@ export default class AuthService {
 	static async registration(
 		name: string,
 		email: string,
-		password: string
+		password: string,
+		passwordConfirm: string
 	): Promise<AxiosResponse<IAuthResponse>> {
 		return $api.post<IAuthResponse>('/user/registration', {
 			name,
 			email,
 			password,
+			passwordConfirm,
 		})
 	}
 
