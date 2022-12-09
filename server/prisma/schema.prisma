@@ -18,7 +18,7 @@ model User {
   email          String        @unique
   name           String        @unique
   password       String
-  Tocken         Token?
+  Token          Token?
   isActivated    Boolean       @default(false)
   activationLink String?
   roles          Role[]        @default([GUEST])

@@ -6,7 +6,7 @@ module.exports = class ApiError extends Error {
 	}
 
 	static UnauthorizedUserError() {
-		return new ApiError(401, 'User is not authorized')
+		return new ApiError(403, 'User is not authorized')
 	}
 
 	static AuthHeaderError() {
@@ -14,14 +14,18 @@ module.exports = class ApiError extends Error {
 	}
 
 	static AccessTockenError() {
-		return new ApiError(401, 'User is not authorized (no Access Tocken)')
+		return new ApiError(401, 'User is not authorized (no Access Token)')
 	}
 
 	static ValidateAccessTockenError() {
 		return new ApiError(
 			401,
-			'User is not authorized (Access Tocken Validation error)'
+			'User is not authorized (Access Token Validation error)'
 		)
+	}
+
+	static PermissionError() {
+		return new ApiError(401, 'User has no permissions')
 	}
 
 	// static UserActivationError() {
@@ -34,5 +38,9 @@ module.exports = class ApiError extends Error {
 
 	static ValidationError(message, errors = []) {
 		return new ApiError(422, message, errors)
+	}
+
+	static DataBaseError(message, error) {
+		return new ApiError(500, message, error)
 	}
 }

@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from './routes'
 import { IStore } from './models/IStore'
 import Store from './store'
+import { ProviderAuth } from './hooks/useAuth'
 
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
@@ -17,8 +18,11 @@ export const Context = createContext<IStore>({ store })
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	// <React.StrictMode>
-	<Context.Provider value={{ store }}>
+	<ProviderAuth>
 		<RouterProvider router={router} />
-	</Context.Provider>
+	</ProviderAuth>
+	// <Context.Provider value={{ store }}>
+	// 	<RouterProvider router={router} />
+	// </Context.Provider>
 	// </React.StrictMode>
 )

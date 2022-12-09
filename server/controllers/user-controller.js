@@ -1,3 +1,4 @@
+// const db = require('../db')
 const userService = require('../services/user-service')
 const { validationResult, ValidationError } = require('express-validator')
 const ApiError = require('../extensions/api-error')
@@ -23,15 +24,8 @@ class UserController {
 
 	async login(req, res, next) {
 		try {
-			// const errorFormatter = ({ location, msg, param }) => {
-			// 	// Build your resulting errors however you want! String, object, whatever - it works!
-			// 	// return `${location}[${param}]: ${msg}`
-			// 	return { location, param, msg }
-			// }
-			const errors = validationResult(req) //.formatWith(errorFormatter)
+			const errors = validationResult(req)
 			if (!errors.isEmpty()) {
-				console.log(errors)
-				// return res.status(400).json({ errors: errors.array() })
 				return next(
 					ApiError.ValidationError('Validation error', errors.array())
 				)
@@ -102,6 +96,20 @@ class UserController {
 		} catch (e) {
 			next(e)
 		}
+	}
+
+	async checkEmailExist(email) {
+		await userService.isEmailExist(email).then(
+			() => Promise.resolve(),
+			() => Promise.reject(`E-mail (${email}) not exist`)
+		)
+	}
+
+	async checkPasswordOk(password, { req }) {
+		await userService.isPasswordOk(password, { req }).then(
+			() => Promise.resolve(),
+			() => Promise.reject('Wrong password')
+		)
 	}
 
 	async getUsers(req, res, next) {

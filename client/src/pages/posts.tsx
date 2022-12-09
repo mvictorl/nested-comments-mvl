@@ -1,15 +1,17 @@
-import { useContext, useEffect } from 'react'
-import { Context } from '../index'
-import { observer } from 'mobx-react-lite'
+import { useEffect } from 'react'
+// import { Context } from '../index'
+// import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
 import { Container, Typography } from '@mui/material'
+import { useAuth } from '../hooks/useAuth'
 
 const Posts = () => {
-	const { store } = useContext(Context)
+	const auth = useAuth()
+	// const { store } = useContext(Context)
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		if (!store.isAuth) navigate('/login')
+		if (!auth.isAuth) navigate('/login')
 		// eslint-disable-next-line
 	}, [])
 
@@ -30,4 +32,4 @@ const Posts = () => {
 	)
 }
 
-export default observer(Posts)
+export default Posts

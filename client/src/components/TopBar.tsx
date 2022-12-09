@@ -1,6 +1,6 @@
-import { useState, useContext, MouseEvent } from 'react'
-import { Context } from '..'
-import { observer } from 'mobx-react-lite'
+import { useState, MouseEvent } from 'react'
+// import { Context } from '..'
+// import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
 import {
 	AppBar,
@@ -17,9 +17,13 @@ import { Adb as AdbIcon, Menu as MenuIcon } from '@mui/icons-material'
 import UserAvatar from './UserAvatar'
 import { pages } from '../pages'
 
+import { useAuth } from '../hooks/useAuth'
+
 const TopBar = () => {
-	const { store } = useContext(Context)
+	// const { store } = useContext(Context)
 	const navigate = useNavigate()
+
+	const auth = useAuth()
 
 	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
 	const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
@@ -39,15 +43,29 @@ const TopBar = () => {
 			return true
 		} else {
 			if (
-				store.user != null &&
-				store.user.roles != null &&
-				store.user.roles.includes(p.access)
+				auth.user != null &&
+				auth.user.roles != null &&
+				auth.user.roles.includes(p.access)
 			) {
 				return true
 			}
 		}
 		return false
 	})
+	// const currentPages = pages.filter(p => {
+	// 	if (p.access === 'PUBLIC') {
+	// 		return true
+	// 	} else {
+	// 		if (
+	// 			store.user != null &&
+	// 			store.user.roles != null &&
+	// 			store.user.roles.includes(p.access)
+	// 		) {
+	// 			return true
+	// 		}
+	// 	}
+	// 	return false
+	// })
 
 	return (
 		<AppBar position="sticky">
@@ -149,4 +167,5 @@ const TopBar = () => {
 	)
 }
 
-export default observer(TopBar)
+// export default observer(TopBar)
+export default TopBar

@@ -1,8 +1,8 @@
 const express = require('express')
-const bodyParser = require('body-parser')
 const cors = require('cors')
+const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
-const router = require('./routes.js')
+const router = require('./routes/routes.js')
 const errorMiddleware = require('./middlewares/error-middleware')
 
 const dotenv = require('dotenv').config()
@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 5000
 // Create web-server
 const app = express()
 
+app.disable('x-powered-by')
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(cookieParser())

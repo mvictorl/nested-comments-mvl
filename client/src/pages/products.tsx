@@ -1,6 +1,6 @@
 // import { useContext } from 'react'
 // import { Context } from '../index'
-import { observer } from 'mobx-react-lite'
+// import { observer } from 'mobx-react-lite'
 import { Container, Typography } from '@mui/material'
 
 const Products = () => {
@@ -23,4 +23,4 @@ const Products = () => {
 	)
 }
 
-export default observer(Products)
+export default Products

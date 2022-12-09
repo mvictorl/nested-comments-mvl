@@ -1,6 +1,7 @@
-import { useContext, useEffect } from 'react'
-import { Context } from './index'
-import { observer } from 'mobx-react-lite'
+import { useEffect, useState } from 'react'
+// import { Context } from './index'
+// import { observer } from 'mobx-react-lite'
+import { useAuth } from './hooks/useAuth'
 import { Outlet } from 'react-router-dom'
 
 import './App.css'
@@ -17,12 +18,8 @@ import TopBar from './components/TopBar'
 
 const App = () => {
 	// const [] = useState<IUser[]>([])
-	const { store } = useContext(Context)
-
-	useEffect(() => {
-		store.check()
-		// eslint-disable-next-line
-	}, [])
+	// const { store } = useContext(Context)
+	const { isLoading } = useAuth()
 
 	let theme = createTheme({
 		typography: {
@@ -36,7 +33,7 @@ const App = () => {
 			<CssBaseline />
 			<TopBar />
 			<Container component="main" maxWidth="xl" sx={{ mt: '1rem' }}>
-				{store.isLoading ? (
+				{/* {isLoading ? (
 					<Stack
 						direction="column"
 						sx={{ height: '100vh' }}
@@ -45,12 +42,12 @@ const App = () => {
 					>
 						<CircularProgress size="5rem" />
 					</Stack>
-				) : (
-					<Outlet />
-				)}
+				) : ( */}
+				<Outlet />
+				{/* )} */}
 			</Container>
 		</ThemeProvider>
 	)
 }
 
-export default observer(App)
+export default App

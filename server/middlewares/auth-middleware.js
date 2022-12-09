@@ -1,10 +1,9 @@
 const ApiError = require('../extensions/api-error')
 const tokenService = require('../services/token-service')
 
-module.exports = (req, res, next) => {
-	console.log('===== Auth Middleware start =====')
-
+function authUser(req, res, next) {
 	try {
+		console.log('===== AuthUser Middleware start =====')
 		const authHeader = req.headers.authorization
 
 		if (!authHeader) {
@@ -26,10 +25,35 @@ module.exports = (req, res, next) => {
 		// }
 
 		req.user = userData
+		console.log('===== AuthUser Middleware success end =====')
 		next()
 	} catch (e) {
+		console.log('===== AuthUser Middleware failed end =====')
 		return next(ApiError.UnauthorizedUserError())
 	}
+}
 
-	console.log('===== Auth Middleware end =====')
+function checkPermission(role) {
+	try {
+		console.log('===== CheckPermission Middleware start =====')
+		return (req, res, next) => {
+			if (!req.user) {
+				return next(ApiError.UnauthorizedUserError())
+			}
+
+			if (req.user.role !== role) {
+				return next(ApiError.PermissionError())
+			}
+			console.log('===== CheckPermission Middleware success end =====')
+			next()
+		}
+	} catch (e) {
+		console.log('===== CheckPermission Middleware failed end =====')
+		return next(ApiError.UnauthorizedUserError())
+	}
+}
+
+module.exports = {
+	authUser,
+	checkPermission,
 }

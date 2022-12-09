@@ -1,7 +1,7 @@
-import { useContext, useState, MouseEvent } from 'react'
+import { useState, MouseEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { observer } from 'mobx-react-lite'
-import { Context } from '..'
+// import { observer } from 'mobx-react-lite'
+// import { Context } from '..'
 import {
 	Avatar,
 	Box,
@@ -21,11 +21,15 @@ import {
 	Settings,
 } from '@mui/icons-material'
 
+import { useAuth } from '../hooks/useAuth'
+
 // const settings = ['Profile', 'Account', 'Dashboard']
 
 function UserAvatar(): JSX.Element {
-	const { store } = useContext(Context)
+	// const { store } = useContext(Context)
 	const navigate = useNavigate()
+
+	const auth = useAuth()
 
 	const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
 
@@ -46,19 +50,19 @@ function UserAvatar(): JSX.Element {
 		navigate('/account')
 	}
 	const handleLogout = async () => {
-		await store.logout()
+		await auth.signout()
 		setAnchorElUser(null)
 		navigate('/home')
 	}
 
-	if (store.isAuth) {
+	if (auth.isAuth) {
 		return (
 			<>
 				<Box sx={{ flexGrow: 0 }}>
 					<Tooltip title="Open settings">
 						<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
 							<Avatar
-								alt={store?.user?.name}
+								alt={auth?.user?.name}
 								// src={store.user?.avatar}
 							/>
 						</IconButton>
@@ -134,4 +138,5 @@ function UserAvatar(): JSX.Element {
 	}
 }
 
-export default observer(UserAvatar)
+// export default observer(UserAvatar)
+export default UserAvatar

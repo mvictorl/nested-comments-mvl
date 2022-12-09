@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react-lite'
+// import { observer } from 'mobx-react-lite'
 import { Container, Typography } from '@mui/material'
 
 const Home = () => {
@@ -126,4 +126,4 @@ const Home = () => {
 	)
 }
 
-export default observer(Home)
+export default Home

@@ -39,52 +39,60 @@ class UserService {
 	}
 
 	async login(email, password) {
-		const user = await db.user.findUnique({
-			where: { email },
-			select: {
-				id: true,
-				email: true,
-				name: true,
-				roles: true,
-				password: true,
-				isActivated: true,
-			},
-		})
-		// if (!user) {
-		// 	throw ApiError.ValidationError('Validation error', [
-		// 		{
-		// 			location: 'body',
-		// 			param: 'email',
-		// 			msg: `E-mail (${email}) not found`,
-		// 		},
-		// 	])
-		// 	// ApiError.BadRequest('Validation error', errors.array())
+		try {
+			return await db.user
+				.findUnique({
+					where: { email },
+					select: {
+						id: true,
+						email: true,
+						name: true,
+						roles: true,
+						password: true,
+						isActivated: true,
+					},
+				})
+				.then(
+					async user => {
+						if (!(await bcrypt.compare(password, user.password))) {
+							throw ApiError.ValidationError('Incorrect password', [
+								{
+									value: password,
+									msg: 'Incorrect password',
+									param: 'password',
+									location: 'body',
+								},
+							])
+						}
+
+						const userDto = {
+							id: user.id,
+							email: user.email,
+							name: user.name,
+							roles: user.roles,
+							isActivated: user.isActivated,
+						} // id, email, isActivated
+
+						const tokens = tokenService.generatePairOfTokens({ ...userDto })
+						// ToDO: check old token for this user & change it
+						await tokenService.saveToken(userDto.id, tokens.refreshToken)
+
+						return { ...tokens, user: userDto }
+					},
+					err => {
+						console.error('DataBase error')
+						throw ApiError.DataBaseError('DB Error', e)
+					}
+				)
+		} catch (e) {
+			console.error('DB Error')
+			throw ApiError.DataBaseError('DB Error', e)
+		}
+
+		// } catch (e) {
+		// 	console.error('DataBase error')
+		// 	throw ApiError.DataBaseError('DB Error', e)
 		// }
-
-		// const isPasswordsEqials = await bcrypt.compare(password, user.password)
-		// if (!isPasswordsEqials) {
-		// 	throw ApiError.ValidationError('Validation error', [
-		// 		{
-		// 			location: 'body',
-		// 			param: 'password',
-		// 			msg: `Wrong passord`,
-		// 		},
-		// 	])
-		// 	// throw ApiError.BadRequest(`Wrong passord`)
-		// }
-
-		const userDto = {
-			id: user.id,
-			email: user.email,
-			name: user.name,
-			roles: user.roles,
-			isActivated: user.isActivated,
-		} // id, email, isActivated
-
-		const tokens = tokenService.generatePairOfTokens({ ...userDto })
-		// ToDO: check old token for this user & change it
-		await tokenService.saveToken(userDto.id, tokens.refreshToken)
-		return { ...tokens, user: userDto }
 	}
 
 	async logout(refreshToken) {
@@ -187,6 +195,49 @@ class UserService {
 				roles: ['USER'],
 			},
 		})
+	}
+
+	async isEmailExist(email) {
+		try {
+			await db.user
+				.findUnique({
+					where: { email },
+					select: {
+						id: true,
+					},
+				})
+				.then(
+					user => (!!user ? Promise.resolve(true) : Promise.reject(false)),
+					() => Promise.reject(false)
+				)
+		} catch (e) {
+			throw ApiError.DataBaseError('DB Error', e)
+		}
+	}
+
+	async isPasswordOk(password, { req }) {
+		try {
+			await db.user
+				.findUnique({
+					where: { email: req.body.email },
+					select: {
+						password: true,
+					},
+				})
+				.then(
+					user =>
+						!!user
+							? bcrypt.compare(password, user.password)
+							: Promise.reject(false),
+					() => Promise.reject(false)
+				)
+				.then(
+					res => (!res ? Promise.reject(false) : Promise.resolve(true)),
+					() => Promise.reject(false)
+				)
+		} catch (e) {
+			throw ApiError.DataBaseError('DB Error', e)
+		}
 	}
 
 	async getUsers() {
